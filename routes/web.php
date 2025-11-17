@@ -19,6 +19,9 @@ Route::middleware(['auth', 'verified', 'warga'])->prefix('dashboard')->group(fun
     Route::get('/create', [LaporanController::class, 'create'])->name('laporan.create');
     Route::post('/', [LaporanController::class, 'store'])->name('laporan.store');
     Route::get('/{laporan}', [LaporanController::class, 'show'])->name('laporan.show');
+    Route::get('/{laporan}/edit', [LaporanController::class, 'edit'])->name('laporan.edit');
+    Route::put('/{laporan}', [LaporanController::class, 'update'])->name('laporan.update');
+    Route::delete('/{laporan}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
 });
 
 // Grup Admin/Petugas - Dashboard Admin

@@ -36,10 +36,10 @@ class LaporanController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'judul' => 'required|string|max:255',
+            'judul' => 'required|string|min:5|max:255',
             'kategori_id' => 'required|exists:kategoris,id',
-            'lokasi' => 'required|string|max:255',
-            'isi_laporan' => 'required|string',
+            'lokasi' => 'required|string|min:5|max:255',
+            'isi_laporan' => 'required|string|min:10',
             'foto_bukti' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -70,5 +70,73 @@ class LaporanController extends Controller
         $laporan->load('kategori', 'tanggapans.user');
 
         return view('laporan.show', compact('laporan'));
+    }
+
+    /**
+     * Tampilkan form edit laporan
+     */
+    public function edit(Laporan $laporan)
+    {
+        // Pastikan hanya pemilik laporan yang bisa edit
+        if ($laporan->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses ke laporan ini.');
+        }
+
+        $kategoris = \App\Models\Kategori::all();
+        return view('laporan.edit', compact('laporan', 'kategoris'));
+    }
+
+    /**
+     * Update laporan
+     */
+    public function update(Request $request, Laporan $laporan)
+    {
+        // Pastikan hanya pemilik laporan yang bisa update
+        if ($laporan->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses ke laporan ini.');
+        }
+
+        $validated = $request->validate([
+            'judul' => 'required|string|min:5|max:255',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'lokasi' => 'required|string|min:5|max:255',
+            'isi_laporan' => 'required|string|min:10',
+            'foto_bukti' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $validated['user_id'] = auth()->id();
+
+        // Handle foto bukti jika ada
+        if ($request->hasFile('foto_bukti')) {
+            // Hapus foto lama jika ada
+            if ($laporan->foto_bukti) {
+                \Storage::disk('public')->delete($laporan->foto_bukti);
+            }
+            $validated['foto_bukti'] = $request->file('foto_bukti')->store('laporan', 'public');
+        }
+
+        $laporan->update($validated);
+
+        return redirect()->route('laporan.show', $laporan)->with('success', 'Laporan berhasil diperbarui!');
+    }
+
+    /**
+     * Hapus laporan
+     */
+    public function destroy(Laporan $laporan)
+    {
+        // Pastikan hanya pemilik laporan yang bisa hapus
+        if ($laporan->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses ke laporan ini.');
+        }
+
+        // Hapus foto bukti jika ada
+        if ($laporan->foto_bukti) {
+            \Storage::disk('public')->delete($laporan->foto_bukti);
+        }
+
+        $laporan->delete();
+
+        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil dihapus!');
     }
 }
