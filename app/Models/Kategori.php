@@ -6,5 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Kategori extends Model
 {
-    //
+    protected $guarded = ['id'];
+
+    /**
+     * Relasi ke Laporan
+     */
+    public function laporans()
+    {
+        return $this->hasMany(Laporan::class);
+    }
 }
