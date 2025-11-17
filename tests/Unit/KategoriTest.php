@@ -2,8 +2,9 @@
 
 use App\Models\Kategori;
 use App\Models\Laporan;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(Tests\TestCase::class);
+uses(Tests\TestCase::class, RefreshDatabase::class);
 
 test('kategori has required attributes', function () {
     $kategori = Kategori::factory()->create([

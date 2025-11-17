@@ -3,8 +3,9 @@
 use App\Models\User;
 use App\Models\Laporan;
 use App\Models\Tanggapan;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(Tests\TestCase::class);
+uses(Tests\TestCase::class, RefreshDatabase::class);
 
 test('user has required attributes', function () {
     $user = User::factory()->create([

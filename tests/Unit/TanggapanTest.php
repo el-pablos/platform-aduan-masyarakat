@@ -3,8 +3,9 @@
 use App\Models\Tanggapan;
 use App\Models\Laporan;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(Tests\TestCase::class);
+uses(Tests\TestCase::class, RefreshDatabase::class);
 
 test('tanggapan has required attributes', function () {
     $laporan = Laporan::factory()->create();
