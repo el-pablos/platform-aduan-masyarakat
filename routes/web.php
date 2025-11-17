@@ -29,13 +29,13 @@ Route::middleware(['auth', 'petugas'])->prefix('admin')->name('admin.')->group(f
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/laporan/{laporan}', [AdminController::class, 'showLaporan'])->name('laporan.show');
     Route::post('/laporan/{laporan}/tanggapan', [TanggapanController::class, 'store'])->name('tanggapan.store');
-    Route::patch('/laporan/{laporan}/status', [AdminController::class, 'updateStatus'])->name('laporan.updateStatus');
 });
 
-// Grup Admin Only - CRUD User & Kategori
+// Grup Admin Only - CRUD User & Kategori & Update Status
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('kategori', KategoriController::class);
+    Route::patch('/laporan/{laporan}/status', [AdminController::class, 'updateStatus'])->name('laporan.updateStatus');
 });
 
 // Profile Routes (untuk semua user yang login)

@@ -110,8 +110,8 @@ test('warga can update their own laporan', function () {
         'isi_laporan' => 'Updated deskripsi',
         'lokasi' => 'Updated lokasi',
     ]);
-    
-    $response->assertRedirect(route('laporan.index'));
+
+    $response->assertRedirect(route('laporan.show', $laporan));
     
     $this->assertDatabaseHas('laporans', [
         'id' => $laporan->id,
