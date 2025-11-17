@@ -20,7 +20,10 @@ class LaporanFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'kategori_id' => Kategori::factory(),
+            'kategori_id' => Kategori::firstOrCreate(
+                ['slug' => 'infrastruktur'],
+                ['nama' => 'Infrastruktur']
+            )->id,
             'judul' => fake()->sentence(),
             'isi_laporan' => fake()->paragraph(),
             'lokasi' => fake()->address(),

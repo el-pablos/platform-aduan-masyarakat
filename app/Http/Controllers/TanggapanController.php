@@ -13,7 +13,7 @@ class TanggapanController extends Controller
     public function store(Request $request, Laporan $laporan)
     {
         $validated = $request->validate([
-            'isi_tanggapan' => 'required|string',
+            'isi_tanggapan' => 'required|string|min:10',
         ]);
 
         $laporan->tanggapans()->create([
